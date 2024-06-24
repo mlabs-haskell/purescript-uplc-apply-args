@@ -12,8 +12,8 @@ import Cardano.Types.PlutusScript as PlutusScript
 import Data.Either (Either(Left, Right))
 
 foreign import apply_params_to_script
-  :: (forall (x :: Type). x -> Either x CSL.PlutusScript)
-  -> (forall (x :: Type). x -> Either String x)
+  :: (forall a b. a -> Either a b)
+  -> (forall a b. b -> Either a b)
   -> CSL.PlutusData
   -> CSL.PlutusScript
   -> Either String CSL.PlutusScript
