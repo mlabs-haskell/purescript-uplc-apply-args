@@ -275,7 +275,7 @@
                 purs-tidy check './src/**/*.purs' './test/**/*.purs'
                 nixpkgs-fmt --check "$(fd --no-ignore-parent -enix --exclude='spago*')"
                 prettier --log-level warn -c $(fd --no-ignore-parent -ejs -ecjs)
-                eslint --quiet $(fd --no-ignore-parent -ejs -ecjs) --parser-options 'sourceType: module'
+                eslint --quiet $(fd --no-ignore-parent -ejs -ecjs) --parser-options 'sourceType: module' --parser-options 'ecmaVersion: 2016'
                 touch $out
               '';
           };
