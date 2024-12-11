@@ -1,4 +1,4 @@
-import * as lib from "@mlabs-haskell/cardano-serialization-lib-gc";
+import * as lib from "@mlabs-haskell/cardano-data-lite"
 import * as apply_args from "@mlabs-haskell/uplc-apply-args";
 
 /**
@@ -10,7 +10,6 @@ import * as apply_args from "@mlabs-haskell/uplc-apply-args";
  */
 export function apply_params_to_script(left) {
   return right => args => script => {
-    let version = script.language_version();
     let appliedScript;
     try {
       let scriptBytes = script.bytes(); // raw bytes
@@ -27,6 +26,6 @@ export function apply_params_to_script(left) {
     } catch (e1) {
       return left("Error serializing arguments: ".concat(e1.toString()));
     }
-    return right(lib.PlutusScript.new_with_version(appliedScript, version));
+    return right(lib.PlutusScript.new(appliedScript));
   };
 }

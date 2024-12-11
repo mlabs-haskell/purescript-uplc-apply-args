@@ -13,8 +13,9 @@ to generate this file without the comments in this block.
 { name = "purescript-uplc-apply-args"
 , dependencies =
   [ "aff"
+  , "bifunctors"
   , "bytearrays"
-  , "cardano-serialization-lib"
+  , "cardano-data-lite"
   , "cardano-types"
   , "effect"
   , "either"
@@ -25,6 +26,7 @@ to generate this file without the comments in this block.
   , "maybe"
   , "mote"
   , "mote-testplan"
+  , "newtype"
   , "partial"
   , "prelude"
   , "profunctor"
