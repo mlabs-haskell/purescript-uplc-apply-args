@@ -4,7 +4,7 @@ import Prelude
 
 import Cardano.Plutus.ApplyArgs (applyArgs)
 import Cardano.ToData (toData)
-import Cardano.Types (PlutusData(..), PlutusScript(..))
+import Cardano.Types (PlutusData(Bytes, Constr, List, Map), PlutusScript(PlutusScript))
 import Cardano.Types.BigNum as BigNum
 import Cardano.Types.Language (Language(PlutusV1, PlutusV2))
 import Control.Monad.Error.Class (class MonadError, liftEither)
