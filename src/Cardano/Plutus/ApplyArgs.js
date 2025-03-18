@@ -1,4 +1,4 @@
-import * as lib from "@mlabs-haskell/cardano-data-lite"
+import * as lib from "@mlabs-haskell/cardano-data-lite";
 import * as apply_args from "@mlabs-haskell/uplc-apply-args";
 
 /**
