@@ -20,7 +20,12 @@
     };
   };
 
-  outputs = inputs @ { self, flake-parts, hercules-ci-effects, ... }:
+  outputs =
+    inputs @ { self
+    , flake-parts
+    , hercules-ci-effects
+    , ...
+    }:
     flake-parts.lib.mkFlake { inherit inputs; } ({ ... }: {
       imports = [
         # Hercules CI effects module used to deploy to GitHub Pages
@@ -30,9 +35,14 @@
       # Systems supported by this flake
       systems = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
 
-      perSystem = { self', pkgs, system, ... }:
+      perSystem =
+        { self'
+        , pkgs
+        , system
+        , ...
+        }:
         let
-          easy-ps = (import inputs.easy-purescript-nix { inherit pkgs; });
+          easy-ps = import inputs.easy-purescript-nix { inherit pkgs; };
 
           spagoPkgs = import ./spago-packages.nix { inherit pkgs; };
 
@@ -48,9 +58,9 @@
               # If warnings generated from project source files will trigger a build error.
               # Controls `--strict` purescript-psa flag
               strictComp ? true
-              # Warnings from `purs` to silence during compilation, independent of `strictComp`
+            , # Warnings from `purs` to silence during compilation, independent of `strictComp`
               # Controls `--censor-codes` purescript-psa flag
-            , censorCodes ? [ "UserDefinedWarning" ]
+              censorCodes ? [ "UserDefinedWarning" ]
             , ...
             }:
             pkgs.stdenv.mkDerivation {
@@ -68,7 +78,7 @@
               unpackPhase = "true";
               buildPhase = ''
                 install-spago-style
-                psa ${pkgs.lib.optionalString strictComp "--strict" } \
+                psa ${pkgs.lib.optionalString strictComp "--strict"} \
                   --censor-lib \
                   --is-lib=.spago ".spago/*/*/src/**/*.purs" \
                   --censor-codes=${builtins.concatStringsSep "," censorCodes} \
@@ -124,9 +134,9 @@
               # If warnings generated from project source files will trigger a build error.
               # Controls `--strict` purescript-psa flag
               strictComp ? true
-              # Warnings from `purs` to silence during compilation, independent of `strictComp`
+            , # Warnings from `purs` to silence during compilation, independent of `strictComp`
               # Controls `--censor-codes` purescript-psa flag
-            , censorCodes ? [ "UserDefinedWarning" ]
+              censorCodes ? [ "UserDefinedWarning" ]
             , pursDependencies ? buildPursDependencies {
                 inherit strictComp censorCodes;
               }
@@ -165,7 +175,7 @@
                 chmod -R +w output/
               '';
               buildPhase = ''
-                psa ${pkgs.lib.optionalString strictComp "--strict" } \
+                psa ${pkgs.lib.optionalString strictComp "--strict"} \
                   --censor-lib \
                   --is-lib=.spago ".spago/*/*/src/**/*.purs" \
                   --censor-codes=${builtins.concatStringsSep "," censorCodes} "./src/**/*.purs" \
@@ -186,21 +196,23 @@
             {
               # The main Purescript module
               testMain
-              # The entry point function in the main PureScript module
-            , psEntryPoint ? "main"
-              # Additional variables to pass to the test environment
-            , env ? { }
-              # Passed through to the `buildInputs` of the derivation. Use this to add
+            , # The entry point function in the main PureScript module
+              psEntryPoint ? "main"
+            , # Additional variables to pass to the test environment
+              env ? { }
+            , # Passed through to the `buildInputs` of the derivation. Use this to add
               # additional packages to the test environment
-            , buildInputs ? [ ]
+              buildInputs ? [ ]
             , builtProject ? buildPursProject { main = testMain; }
             , ...
-            }: pkgs.runCommand "ps-test"
+            }:
+            pkgs.runCommand "ps-test"
               (
                 {
                   src = ./.;
                   buildInputs = [ pkgs.nodejs ];
-                } // env
+                }
+                // env
               )
               ''
                 # Copy the purescript project files
@@ -220,7 +232,6 @@
                 # Create output file to tell Nix we succeeded
                 touch $out
               '';
-
         in
         {
           devShells = {
@@ -258,26 +269,30 @@
 
           # Example flake checks. Run with `nix flake check --keep-going`
           checks = {
-            tests = runPursTest { testMain = "Test.Main"; psEntryPoint = "main"; };
+            tests = runPursTest {
+              testMain = "Test.Main";
+              psEntryPoint = "main";
+            };
 
-            formatting-check = pkgs.runCommand "formatting-check"
-              {
-                nativeBuildInputs = with pkgs; [
-                  easy-ps.purs-tidy
-                  nixpkgs-fmt
-                  nodePackages.prettier
-                  nodePackages.eslint
-                  fd
-                ];
-              }
-              ''
-                cd ${self}
-                purs-tidy check './src/**/*.purs' './test/**/*.purs'
-                nixpkgs-fmt --check "$(fd --no-ignore-parent -enix --exclude='spago*')"
-                prettier --log-level warn -c $(fd --no-ignore-parent -ejs -ecjs)
-                eslint --quiet $(fd --no-ignore-parent -ejs -ecjs) --parser-options 'sourceType: module' --parser-options 'ecmaVersion: 2016'
-                touch $out
-              '';
+            formatting-check =
+              pkgs.runCommand "formatting-check"
+                {
+                  nativeBuildInputs = with pkgs; [
+                    easy-ps.purs-tidy
+                    nixpkgs-fmt
+                    nodePackages.prettier
+                    nodePackages.eslint
+                    fd
+                  ];
+                }
+                ''
+                  cd ${self}
+                  purs-tidy check './src/**/*.purs' './test/**/*.purs'
+                  nixpkgs-fmt --check "$(fd --no-ignore-parent -enix --exclude='spago*')"
+                  prettier --log-level warn -c $(fd --no-ignore-parent -ejs -ecjs)
+                  eslint --quiet $(fd --no-ignore-parent -ejs -ecjs) --parser-options 'sourceType: module' --parser-options 'ecmaVersion: 2016'
+                  touch $out
+                '';
           };
         };
 
