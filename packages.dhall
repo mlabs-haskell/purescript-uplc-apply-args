@@ -117,7 +117,7 @@ let additions =
           , "unsafe-coerce"
           ]
         , repo = "https://github.com/mlabs-haskell/purescript-cardano-types"
-        , version = "5fe759a6e3d77450b3998e46fbbc17deafc69613"
+        , version = "v5.0.0"
         }
       , cardano-data-lite =
         { dependencies =

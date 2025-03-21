@@ -1,7 +1,6 @@
 { name = "uplc-apply-args"
 , dependencies =
   [ "aff"
-  , "bifunctors"
   , "bytearrays"
   , "cardano-data-lite"
   , "cardano-types"
@@ -14,7 +13,6 @@
   , "maybe"
   , "mote"
   , "mote-testplan"
-  , "newtype"
   , "partial"
   , "prelude"
   , "profunctor"
